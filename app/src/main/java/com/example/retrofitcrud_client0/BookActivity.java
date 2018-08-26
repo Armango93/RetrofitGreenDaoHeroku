@@ -25,9 +25,6 @@ public class BookActivity extends AppCompatActivity {
     Button buttonSave;
     Button buttonDelete;
 
-    private DaoSession mDaoSession = null;
-    private BookDao mBooksItemDao = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +37,6 @@ public class BookActivity extends AppCompatActivity {
         editFormPublishDate = findViewById(R.id.editDatePublish);
         buttonDelete = findViewById(R.id.buttonDelete);
         buttonSave = findViewById(R.id.buttonSave);
-
-        mDaoSession = ((App)getApplication()).getDaoSession();
-        mBooksItemDao = mDaoSession.getBookDao();
 
 
         bookInterface = ApiUtils.getBookInterface();
@@ -100,7 +94,6 @@ public class BookActivity extends AppCompatActivity {
     }
 
     public void addBook(Book book){
-        mBooksItemDao.insertInTx(book);
         Call<Book> callBook = bookInterface.addBook(book);
 
         callBook.enqueue(new Callback<Book>(){
@@ -122,7 +115,6 @@ public class BookActivity extends AppCompatActivity {
     }
 
     public void updateBook (final int id, final Book book){
-        mBooksItemDao.update(book);
         Call<Book> callBook = bookInterface.updateBook(id, book);
         callBook.enqueue(new Callback<Book>(){
             @Override

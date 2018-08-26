@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.retrofitcrud_client0.bd.Book;
 import com.example.retrofitcrud_client0.bd.BookDao;
@@ -14,6 +15,9 @@ import com.example.retrofitcrud_client0.bd.DaoSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,9 +27,15 @@ public class MainActivity extends AppCompatActivity {
     private DaoSession mDaoSession = null;
     private BookDao mBooksItemDao = null;
 
+   @BindView(R.id.btnAddBook)
     Button btnAddBook;
+
+    @BindView(R.id.btnGetBookList)
     Button btnGetBookList;
+
+    @BindView(R.id.listView)
     ListView listView;
+
     BookInterface bookInterface;
     List<Book> listOfBooks = new ArrayList<>();
 
@@ -35,20 +45,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+/*
         listView = findViewById(R.id.listView);
 
         btnAddBook = findViewById(R.id.btnAddBook);
         btnGetBookList = findViewById(R.id.btnGetBookList);
+*/
 
         mDaoSession = ((App)getApplication()).getDaoSession();
         mBooksItemDao = mDaoSession.getBookDao();
+        mBooksItemDao.deleteAll();
 
+
+/*
         btnGetBookList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 getBookList();
             }
         });
+
 
         btnAddBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +75,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+*/
+
 
         bookInterface = ApiUtils.getBookInterface();
     }
 
+    @OnClick(R.id.btnAddBook)
+    public void onClick() {
+        Intent intent = new Intent(MainActivity.this, BookActivity.class);
+        intent.putExtra("bookName", "");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.btnGetBookList)
     public void getBookList(){
         Call<List<Book>> call = bookInterface.getBooks();
         call.enqueue(new Callback<List<Book>>(){
@@ -71,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     listOfBooks = response.body();
                     List<Book> books = response.body();
 
-                    mBooksItemDao.insertInTx(books);
+                    mBooksItemDao.insertOrReplaceInTx(books);
                 }
                 listView.setAdapter(new BookAdapter(MainActivity.this, R.layout.listbook, mBooksItemDao.loadAll()));
             }
