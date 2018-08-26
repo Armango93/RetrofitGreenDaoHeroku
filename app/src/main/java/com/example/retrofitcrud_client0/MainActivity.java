@@ -46,37 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-/*
-        listView = findViewById(R.id.listView);
-
-        btnAddBook = findViewById(R.id.btnAddBook);
-        btnGetBookList = findViewById(R.id.btnGetBookList);
-*/
 
         mDaoSession = ((App)getApplication()).getDaoSession();
         mBooksItemDao = mDaoSession.getBookDao();
         mBooksItemDao.deleteAll();
-
-
-/*
-        btnGetBookList.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                getBookList();
-            }
-        });
-
-
-        btnAddBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, BookActivity.class);
-                intent.putExtra("bookName", "");
-                startActivity(intent);
-            }
-        });
-*/
-
 
         bookInterface = ApiUtils.getBookInterface();
     }
