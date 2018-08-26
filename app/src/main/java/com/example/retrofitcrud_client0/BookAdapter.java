@@ -14,9 +14,29 @@ import com.example.retrofitcrud_client0.bd.Book;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class BookAdapter extends ArrayAdapter<Book> {
     private Context context;
     private List<Book> listBooks;
+
+    @BindView(R.id.bookId)
+    TextView bookId;
+
+    @BindView(R.id.bookTitle)
+    TextView bookTitle;
+
+    @BindView(R.id.bookAuthor)
+    TextView bookAuthor;
+
+    @BindView(R.id.bookDescription)
+    TextView bookDescription;
+
+    @BindView(R.id.bookPublished)
+    TextView bookPublished;
+
 
     public BookAdapter(@NonNull Context context, int resource, @NonNull List<Book> objects) {
         super(context, resource, objects);
@@ -30,11 +50,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.listbook, parent, false);
 
-        final TextView bookId = (TextView) rowView.findViewById(R.id.bookId);
-        final TextView bookTitle = (TextView)rowView.findViewById(R.id.bookTitle);
-        final TextView bookAuthor = (TextView)rowView.findViewById(R.id.bookAuthor);
-        final TextView bookDescription = (TextView)rowView.findViewById(R.id.bookDescription);
-        final TextView bookPublished = (TextView)rowView.findViewById(R.id.bookPublished);
+        ButterKnife.bind(this,rowView);
 
         bookId.setText(String.format("Это ID %d",listBooks.get(position).getId()));
         bookTitle.setText(String.format("Это заголовок %s" ,listBooks.get(position).getTitle()));
@@ -58,5 +74,6 @@ public class BookAdapter extends ArrayAdapter<Book> {
         });
 
         return rowView;
+
     }
 }
