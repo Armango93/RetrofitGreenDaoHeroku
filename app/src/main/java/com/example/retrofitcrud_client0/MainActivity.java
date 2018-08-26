@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private DaoSession mDaoSession = null;
     private BookDao mBooksItemDao = null;
 
-   @BindView(R.id.btnAddBook)
+    @BindView(R.id.btnAddBook)
     Button btnAddBook;
 
     @BindView(R.id.btnGetBookList)
@@ -40,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
     List<Book> listOfBooks = new ArrayList<>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mDaoSession = ((App)getApplication()).getDaoSession();
+        mDaoSession = ((App) getApplication()).getDaoSession();
         mBooksItemDao = mDaoSession.getBookDao();
         mBooksItemDao.deleteAll();
 
@@ -62,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnGetBookList)
-    public void getBookList(){
+    public void getBookList() {
         Call<List<Book>> call = bookInterface.getBooks();
-        call.enqueue(new Callback<List<Book>>(){
+        call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     listOfBooks = response.body();
                     List<Book> books = response.body();
 

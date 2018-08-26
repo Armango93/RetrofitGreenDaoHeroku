@@ -11,32 +11,42 @@ import com.example.retrofitcrud_client0.bd.Book;
 import com.example.retrofitcrud_client0.bd.BookDao;
 import com.example.retrofitcrud_client0.bd.DaoSession;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BookActivity extends AppCompatActivity {
+
     BookInterface bookInterface;
+
+    @BindView(R.id.editBookId)
     EditText editFormId;
+
+    @BindView(R.id.editTitle)
     EditText editFormTitle;
+
+    @BindView(R.id.editAuthor)
     EditText editFormAuthor;
+
+    @BindView(R.id.editDescription)
     EditText editFormDescription;
+
+    @BindView(R.id.editDatePublish)
     EditText editFormPublishDate;
+
+    @BindView(R.id.buttonSave)
     Button buttonSave;
+
+    @BindView(R.id.buttonDelete)
     Button buttonDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
-
-        editFormId = findViewById(R.id.editBookId);
-        editFormTitle = findViewById(R.id.editTitle);
-        editFormAuthor = findViewById(R.id.editAuthor);
-        editFormDescription = findViewById(R.id.editDescription);
-        editFormPublishDate = findViewById(R.id.editDatePublish);
-        buttonDelete = findViewById(R.id.buttonDelete);
-        buttonSave = findViewById(R.id.buttonSave);
+        ButterKnife.bind(this);
 
 
         bookInterface = ApiUtils.getBookInterface();
@@ -61,8 +71,6 @@ public class BookActivity extends AppCompatActivity {
             editFormId.setVisibility(View.INVISIBLE);
         }
 
-//        buttonSave = findViewById(R.id.buttonSave);
-//        buttonDelete = findViewById(R.id.buttonDelete);
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
