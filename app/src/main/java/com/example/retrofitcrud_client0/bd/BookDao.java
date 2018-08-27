@@ -13,7 +13,7 @@ import org.greenrobot.greendao.database.DatabaseStatement;
 /** 
  * DAO for table "BOOK".
 */
-public class BookDao extends AbstractDao<Book, Void> {
+public class BookDao extends AbstractDao<Book, Long> {
 
     public static final String TABLENAME = "BOOK";
 
@@ -22,7 +22,7 @@ public class BookDao extends AbstractDao<Book, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, Integer.class, "id", false, "ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Author = new Property(2, String.class, "author", false, "AUTHOR");
         public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
@@ -42,7 +42,7 @@ public class BookDao extends AbstractDao<Book, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BOOK\" (" + //
-                "\"ID\" INTEGER," + // 0: id
+                "\"id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"AUTHOR\" TEXT," + // 2: author
                 "\"DESCRIPTION\" TEXT," + // 3: description
@@ -59,7 +59,7 @@ public class BookDao extends AbstractDao<Book, Void> {
     protected final void bindValues(DatabaseStatement stmt, Book entity) {
         stmt.clearBindings();
  
-        Integer id = entity.getId();
+        Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
@@ -89,7 +89,7 @@ public class BookDao extends AbstractDao<Book, Void> {
     protected final void bindValues(SQLiteStatement stmt, Book entity) {
         stmt.clearBindings();
  
-        Integer id = entity.getId();
+        Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
@@ -116,14 +116,14 @@ public class BookDao extends AbstractDao<Book, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Book readEntity(Cursor cursor, int offset) {
         Book entity = new Book( //
-            cursor.isNull(offset + 0) ? null : cursor.getInt(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // author
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // description
@@ -134,7 +134,7 @@ public class BookDao extends AbstractDao<Book, Void> {
      
     @Override
     public void readEntity(Cursor cursor, Book entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getInt(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setAuthor(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setDescription(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -142,20 +142,23 @@ public class BookDao extends AbstractDao<Book, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(Book entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(Book entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(Book entity) {
-        return null;
+    public Long getKey(Book entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(Book entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

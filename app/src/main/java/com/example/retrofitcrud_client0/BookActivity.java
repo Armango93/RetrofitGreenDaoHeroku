@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.retrofitcrud_client0.bd.Book;
-import com.example.retrofitcrud_client0.bd.BookDao;
-import com.example.retrofitcrud_client0.bd.DaoSession;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +54,7 @@ public class BookActivity extends AppCompatActivity {
         bookInterface = ApiUtils.getBookInterface();
         extras = getIntent().getExtras();
 
-        bookId = String.valueOf(extras.getInt("id"));
+        bookId = String.valueOf(extras.getLong("id"));
         String title = extras.getString("title");
         String author = extras.getString("author");
         String description = extras.getString("description");
@@ -112,7 +110,7 @@ public class BookActivity extends AppCompatActivity {
     @OnClick(R.id.buttonSave)
     public void saveBtnClicked() {
         Book book = new Book();
-        book.setId(editFormId.getId());
+        book.setId((long) editFormId.getId());
         book.setTitle(editFormTitle.getText().toString());
         book.setAuthor(editFormAuthor.getText().toString());
         book.setDescription(editFormDescription.getText().toString());
@@ -127,8 +125,8 @@ public class BookActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonDelete)
     public void deleteBtnClicked() {
-        final String userId = String.valueOf(extras.getInt("id"));
-        deleteBook(Integer.parseInt(userId));
+        final String userId = String.valueOf(extras.getLong("id"));
+        deleteBook(Long.parseLong(userId));
     }
 
 
@@ -170,7 +168,7 @@ public class BookActivity extends AppCompatActivity {
         });
     }
 
-    public void deleteBook(final int id) {
+    public void deleteBook(final long id) {
         Call<Book> callBook = bookInterface.deleteBook(id);
         System.out.println(id);
         callBook.enqueue(new Callback<Book>() {

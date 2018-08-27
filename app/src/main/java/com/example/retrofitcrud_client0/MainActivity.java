@@ -3,10 +3,8 @@ package com.example.retrofitcrud_client0;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.retrofitcrud_client0.bd.Book;
 import com.example.retrofitcrud_client0.bd.BookDao;
@@ -26,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DaoSession mDaoSession = null;
     private BookDao mBooksItemDao = null;
+    BookAdapter bookAdapter;
 
     @BindView(R.id.btnAddBook)
     Button btnAddBook;
@@ -51,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
         mBooksItemDao.deleteAll();
 
         bookInterface = ApiUtils.getBookInterface();
+//        getBookList();
+//        setBookAdapter();
+    }
+
+    public void setBookAdapter() {
+        List<Book> books = new ArrayList<>();
+        books = mBooksItemDao.loadAll();
+        this.bookAdapter = new BookAdapter(this, R.layout.listbook, books);
     }
 
     @OnClick(R.id.btnAddBook)
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     listOfBooks = response.body();
                     List<Book> books = response.body();
-
+                    mBooksItemDao.deleteAll();
                     mBooksItemDao.insertOrReplaceInTx(books);
                 }
                 listView.setAdapter(new BookAdapter(MainActivity.this, R.layout.listbook, mBooksItemDao.loadAll()));

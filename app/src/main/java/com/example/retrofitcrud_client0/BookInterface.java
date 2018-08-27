@@ -18,14 +18,14 @@ public interface BookInterface {
     Call<List<Book>> getBooks();
 
     @GET("/api/books/{id}")
-    Call<Book> getBook(@Path("id") int id);
+    Call<Book> getBook(@Path("id") long id);
 
     @POST("/api/books/create")
     Call<Book> addBook(@Body Book book);
 
     @PUT("/api/books/{id}")
-    Call<Book> updateBook(@Path("id") int id, @Body Book book);
+    Call<Book> updateBook(@Path("id") long id, @Body Book book);
 
     @DELETE("/api/books/{id}")
-    Call<Book> deleteBook(@Path("id") int id);
+    Call<Book> deleteBook(@Path("id") long id);
 }
